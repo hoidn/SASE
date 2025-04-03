@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.11)  2 APR 2025 18:38
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.11)  3 APR 2025 15:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -340,8 +340,7 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 \Gm@layouthoffset=\dimen172
 \Gm@layoutvoffset=\dimen173
 \Gm@dimlist=\toks25
-)
-No file sase.aux.
+) (./sase.aux)
 \openout1 = `sase.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
@@ -385,6 +384,8 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 Package hyperref Info: Link coloring OFF on input line 15.
+
+(./sase.out) (./sase.out)
 \@outlinefile=\write3
 \openout3 = `sase.out'.
 
@@ -436,53 +437,66 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
-al/texlive/2024/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
-Overfull \hbox (5.58966pt too wide) in paragraph at lines 74--75
-[]\OT1/cmr/bx/n/12 Conclusion on jit-ter\OT1/cmr/m/n/12 : The shot-to-shot jit-
-ter can in-deed in-tro-duce sig-nif-i-cant stochas-
+al/texlive/2024/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}] [2]
+Overfull \hbox (78.08237pt too wide) in paragraph at lines 150--150
+[]\OT1/cmtt/m/n/12 def scattering_model(q_0, L, I_B_func, I_d_func, G_B_func, G
+_d_func, num_samples=100):[] 
  []
 
-[2] [3] [4] [5] (./sase.aux)
+
+Overfull \hbox (10.15733pt too wide) in paragraph at lines 150--150
+[]    \OT1/cmtt/m/n/12 # G_B_func: function computing geometric/polarization fa
+ctors for Bragg[] 
+ []
+
+
+Overfull \hbox (22.50734pt too wide) in paragraph at lines 150--150
+[]    \OT1/cmtt/m/n/12 # G_d_func: function computing geometric/polarization fa
+ctors for diffuse[] 
+ []
+
+[3]
+Overfull \hbox (53.38235pt too wide) in paragraph at lines 150--150
+[]    \OT1/cmtt/m/n/12 # Compute Bragg + diffuse at each sampled q with appropr
+iate geometric factors[] 
+ []
+
+[4] (./sase.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
-
-
-Package rerunfilecheck Warning: File `sase.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `sase.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  2A6AD7CBFCDFC6AB9A8944C667ADDC83;3304.
+Package rerunfilecheck Info: File `sase.out' has not changed.
+(rerunfilecheck)             Checksum: 5971F0595B6C34DBF83EE5BF29929A20;2521.
  ) 
 Here is how much of TeX's memory you used:
- 11507 strings out of 474116
- 173998 string characters out of 5743682
- 1936187 words of memory out of 5000000
- 33687 multiletter control sequences out of 15000+600000
+ 11522 strings out of 474116
+ 174228 string characters out of 5743682
+ 1937187 words of memory out of 5000000
+ 33703 multiletter control sequences out of 15000+600000
  572862 words of font info for 90 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 79i,6n,93p,629b,597s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 79i,6n,93p,436b,597s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
 /usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></
 usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></us
 r/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/
+local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/
 local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/lo
 cal/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/loca
 l/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/
-texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/tex
-live/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texl
-ive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texliv
-e/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive
-/2024/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on sase.pdf (5 pages, 176984 bytes).
+texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/tex
+live/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texliv
+e/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive
+/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2
+024/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/20
+24/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
+Output written on sase.pdf (4 pages, 187764 bytes).
 PDF statistics:
- 142 PDF objects out of 1000 (max. 8388607)
- 105 compressed objects within 2 object streams
- 38 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 179 PDF objects out of 1000 (max. 8388607)
+ 139 compressed objects within 2 object streams
+ 31 named destinations out of 1000 (max. 500000)
+ 105 words of extra memory for PDF output out of 10000 (max. 10000000)
 

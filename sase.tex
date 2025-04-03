@@ -8,7 +8,7 @@
 \usepackage{mathtools}
 \usepackage[margin=1in]{geometry}
 
-\title{Effect of SASE Pulse Properties on Diffuse X-ray Scattering Measurements}
+\title{Effect of SASE Pulse Properties on X-ray Scattering Measurements}
 \author{Author}
 \date{\today}
 
@@ -17,177 +17,139 @@
 \maketitle
 
 \begin{abstract}
-In diffuse X-ray scattering experiments at X-ray Free-Electron Laser (XFEL) facilities, the measured scattering signal depends critically on the properties of the Self-Amplified Spontaneous Emission (SASE) pulses used for the measurements. This document examines how the spectral properties of SASE pulses affect the diffuse scattering patterns recorded by a pixel detector, with particular attention to shot-to-shot variability and finite bandwidth effects. We also propose a differentiable approach using 3D Gaussians with the reparameterization trick to model these effects in analysis workflows.
+We examine how the spectral properties of Self-Amplified Spontaneous Emission (SASE) pulses at X-ray Free-Electron Laser (XFEL) facilities affect measured scattering patterns, focusing on shot-to-shot variability and finite bandwidth. A hierarchy of models is presented, from a monochromatic approximation to approximate spectral modeling using differentiable 3D Gaussians and the reparameterization trick.
 \end{abstract}
 
 \section{Introduction}
-
-In diffuse X-ray scattering experiments at X-ray Free-Electron Laser (XFEL) facilities, the measured scattering signal depends critically on the properties of the Self-Amplified Spontaneous Emission (SASE) pulses used for the measurements. This document examines how the spectral properties of SASE pulses affect the diffuse scattering patterns recorded by a pixel detector.
+In X-ray scattering experiments at XFEL facilities, the measured signal depends on the SASE pulse characteristics. These pulses exhibit shot-to-shot fluctuations in central energy, spectral width, and overall shape. Depending on resolution requirements and the relative size of broadening contributions from other factors, such as mosaicity, different approximations might be used.
 
 \section{Physical Framework}
 
-\subsection{Diffuse Scattering Model}
-
-The diffuse scattering intensity as a function of momentum transfer vector $\mathbf{q}$ can be represented as $I_d(\mathbf{q})$. This is the physical quantity we aim to measure, which represents correlations in electron density fluctuations within the sample.
+\subsection{Scattering Model}
+Let $I(\mathbf{q})$ be the total scattering intensity as a function of the momentum transfer vector $\mathbf{q}$. It comprises Bragg (lattice) and diffuse components:
+\begin{equation}
+I(\mathbf{q}) = I_B(\mathbf{q}) + I_d(\mathbf{q}).
+\end{equation}
 
 \subsection{SASE Pulse Properties}
-
-SASE pulses are characterized by:
+SASE pulses feature a spectral intensity distribution $I_{\text{SASE}}(\omega)$, subject to:
 \begin{itemize}
-\item A spectral intensity distribution $I_{\text{SASE}}(\omega)$ or equivalently $I_{\text{SASE}}(q)$
-\item Shot-to-shot variations in both central energy $\omega_0$ and spectral width $\sigma_\omega$
-\item Finite bandwidth even within a single shot
+    \item Shot-to-shot fluctuations in central energy $\omega_0$ and spectral width $\sigma_\omega$
 \end{itemize}
 
 \subsection{Measurement Process}
-
-The intensity detected at pixel position $(x,y)$ on the detector can be expressed as:
-
+The intensity at pixel $(x,y)$ is
 \begin{equation}
-I_{\text{det}}(x,y) = \int I_d(\mathbf{q}(x,y,\omega)) \cdot I_{\text{SASE}}(\omega) \cdot G(x,y,\omega) \, d\omega
+I_{\text{det}}(x,y) = \int \bigl[I_B(\mathbf{q}(x,y,\omega)) \cdot G_B(x,y,\omega) + I_d(\mathbf{q}(x,y,\omega)) \cdot G_d(x,y,\omega)\bigr]\; I_{\text{SASE}}(\omega)\, d\omega,
 \end{equation}
+where $\mathbf{q}(x,y,\omega)$ maps pixel position and photon energy to momentum transfer, while $G_B(x,y,\omega)$ and $G_d(x,y,\omega)$ represent the distinct geometric, partiality and polarization factors for Bragg and diffuse components, respectively.
 
-where:
+\section{Modeling Approaches by Complexity}
+
+\subsection{Case 1: Stable Monochromatic Approximation}
+\textbf{Assumptions:}
 \begin{itemize}
-\item $\mathbf{q}(x,y,\omega)$ maps the pixel position and photon energy to momentum transfer
-\item $G(x,y,\omega)$ represents geometric correction factors
+\item Negligible shot-to-shot jitter
+\item Negligible bandwidth
 \end{itemize}
-
-\section{Key Considerations}
-
-\subsection{Shot-to-Shot Variability (Jitter)}
-
-The SASE central energy typically fluctuates by $\Delta E/E \approx 10^{-3}$ to $10^{-2}$ at current XFEL facilities. This means that for a 10 keV X-ray beam, the central energy may jitter by 10-100 eV between shots.
-
-The impact on measured intensity can be estimated by:
-
+\textbf{Model:}
 \begin{equation}
-\frac{\Delta I_{\text{det}}}{I_{\text{det}}} \approx \left|\frac{\partial \ln I_d}{\partial q}\right| \cdot \frac{\Delta E}{E} \cdot |\mathbf{q}|
+I_{\text{SASE}}(\omega) \approx \delta(\omega - \omega_0),
+\end{equation}
+\begin{equation}
+I_{\text{det}}(x,y) \approx I_B(\mathbf{q}(x,y,\omega_0)) \cdot G_B(x,y,\omega_0) + I_d(\mathbf{q}(x,y,\omega_0)) \cdot G_d(x,y,\omega_0).
 \end{equation}
 
-For typical diffuse scattering with significant features where $\left|\frac{\partial \ln I_d}{\partial q}\right| \approx 1-10$ \AA{} and $|\mathbf{q}| \approx 0.1-1$ \AA{}$^{-1}$, this yields:
-
+\subsection{Case 2: Shot-to-Shot Jitter, Monochromatic per Shot}
+\textbf{Assumptions:}
+\begin{itemize}
+\item Energy jitter included
+\item Each pulse treated as monochromatic
+\item Bandwidth still small compared to other effects
+\end{itemize}
+\textbf{Model:}
+For shot $j$,
 \begin{equation}
-\frac{\Delta I_{\text{det}}}{I_{\text{det}}} \approx 10^{-4}-10^{-1}
+I_{\text{SASE},j}(\omega) \approx \delta(\omega - \omega_j),
+\end{equation}
+\begin{equation}
+I_{\text{det},j}(x,y) \approx I_B(\mathbf{q}(x,y,\omega_j)) \cdot G_B(x,y,\omega_j) + I_d(\mathbf{q}(x,y,\omega_j)) \cdot G_d(x,y,\omega_j).
+\end{equation}
+An approximate fractional change in intensity due to jitter:
+\begin{equation}
+\frac{\Delta I_{\text{det}}}{I_{\text{det}}} \approx \left|\frac{\partial \ln I}{\partial q}\right|\frac{\Delta E}{E}\,|\mathbf{q}|.
 \end{equation}
 
-\textbf{Conclusion on jitter}: The shot-to-shot jitter can indeed introduce significant stochasticity in the measured intensity, especially at higher resolution (larger $|\mathbf{q}|$) and for diffuse features with sharp gradients. This effect becomes particularly relevant when analyzing small differences in diffuse scattering patterns.
+\subsubsection*{Question}
+How sharp are the features in the diffuse map? Is this fractional change negligible or not, for the diffuse scattering component?
 
-\subsection{Finite Bandwidth of Single Pulses}
-
-SASE pulses typically have a relative bandwidth of $\Delta E/E \approx 10^{-3}$ for a single shot. This leads to an integration over a range of $\mathbf{q}$ values for each pixel:
-
+\subsection{Case 3: Shot-to-Shot Jitter with Gaussian Bandwidth}
+\textbf{Assumptions:}
+\begin{itemize}
+\item Energy jitter and bandwidth both matter
+\item SASE spectrum approximated as Gaussian
+\end{itemize}
+\textbf{Model:}
 \begin{equation}
-\delta q \approx \frac{\Delta E}{E} \cdot |\mathbf{q}|
+I_{\text{SASE},j}(\omega) \approx \exp\!\Bigl[-\frac{(\omega - \omega_j)^2}{2\sigma_{\omega,j}^2}\Bigr],
+\end{equation}
+\begin{equation}
+I_{\text{det},j}(x,y) \approx \int \bigl[I_B(\mathbf{q}(x,y,\omega)) \cdot G_B(x,y,\omega) + I_d(\mathbf{q}(x,y,\omega)) \cdot G_d(x,y,\omega)\bigr]\,
+\exp\!\Bigl[-\tfrac{(\omega - \omega_j)^2}{2\sigma_{\omega,j}^2}\Bigr]\, d\omega.
+\end{equation}
+In reciprocal space, this corresponds to integrating over a "slab" of thickness proportional to $\Delta E/E \times |\mathbf{q}|$.
+
+\subsubsection*{Differentiable Modeling (Monte Carlo)}
+Represent the SASE spectrum in $\mathbf{q}$-space as a 3D Gaussian, with covariance $\Sigma_j = L_j L_j^{T}$. The reparameterization trick samples
+\[
+\mathbf{q} = \mathbf{q}_j + L_j\,\boldsymbol{\epsilon}, \quad \boldsymbol{\epsilon} \sim \mathcal{N}(0,I),
+\]
+yielding a Monte Carlo estimate of $I_{\text{det},j}(x,y)$. The distinct geometric factors must be applied to Bragg and diffuse components at each sampled point.
+
+\subsection{Case 4: Full SASE Spectral Shape}
+\textbf{Assumptions:}
+\begin{itemize}
+\item General shot-to-shot jitter
+\item No simple analytical form for the SASE spectrum
+\end{itemize}
+\textbf{Model:}
+\begin{equation}
+I_{\text{det},j}(x,y) = \int \bigl[I_B(\mathbf{q}(x,y,\omega)) \cdot G_B(x,y,\omega) + I_d(\mathbf{q}(x,y,\omega)) \cdot G_d(x,y,\omega)\bigr]\,
+I_{\text{SASE},j}(\omega)\,d\omega.
 \end{equation}
 
-For $|\mathbf{q}| \approx 1$ \AA{}$^{-1}$, this gives $\delta q \approx 10^{-3}$ \AA{}$^{-1}$.
-
-\textbf{Conclusion on bandwidth}: The finite bandwidth means that each detector pixel measures an integral over a small region in reciprocal space rather than a point. However, this effect is generally small compared to other experimental factors unless measuring extremely sharp features in reciprocal space.
-
-\subsection{3D Visualization}
-
-The finite bandwidth effect can be visualized as measuring a thin ``slab" through reciprocal space rather than an exact 2D Ewald sphere. The thickness of this slab is:
-
-\begin{equation}
-\text{Slab thickness} \approx \frac{\Delta E}{E} \cdot |\mathbf{q}|
-\end{equation}
-
-For typical SASE parameters and $|\mathbf{q}| \approx 1$ \AA{}$^{-1}$, this gives a thickness on the order of $10^{-3}$ \AA{}$^{-1}$.
+\subsubsection*{Implementation}
+Measure or reconstruct each pulse's spectral profile (single-shot spectrometers). Discretize and integrate numerically.
 
 \section{Practical Implications}
 
-\begin{enumerate}
-\item \textbf{Data Processing Strategy}: Multiple shots should be normalized by their spectral distribution and intensity before averaging to reduce the impact of jitter.
-
-\item \textbf{Feature Resolution}: Features in diffuse scattering with characteristic length scales smaller than the slab thickness will be averaged out.
-
-\item \textbf{Simulation Comparison}: When comparing experimental results to theoretical predictions, the experimental data should be understood as representing a weighted average over a small volume in reciprocal space.
-
-\item \textbf{Monochromator Consideration}: Using a monochromator would reduce these effects but at significant cost to intensity.
-\end{enumerate}
-
-\section{Differentiable Modeling of Slab Thickness with 3D Gaussians}
-
-If the slab thickness effect proves significant enough to require explicit modeling, a differentiable approach using 3D Gaussians can be implemented. This approach is particularly valuable when fitting theoretical models to experimental data using gradient-based optimization.
-
-\subsection{Gaussian Representation of SASE Spectral Distribution}
-
-The SASE pulse's spectral distribution can be modeled as a 3D Gaussian in reciprocal space:
-
-\begin{equation}
-I_{\text{SASE}}(\mathbf{q}) \approx \exp\left(-\frac{1}{2}(\mathbf{q} - \mathbf{q}_0)^T \Sigma^{-1} (\mathbf{q} - \mathbf{q}_0)\right)
-\end{equation}
-
-where:
-\begin{itemize}
-\item $\mathbf{q}_0$ is the center of the distribution (determined by the central energy)
-\item $\Sigma$ is the covariance matrix that defines the shape and orientation of the slab
-\end{itemize}
-
-The covariance matrix $\Sigma$ can be parametrized to reflect the anisotropic nature of the slab (thin in one direction, extended along the Ewald sphere).
-
-\subsection{Reparameterization Trick for Differentiability}
-
-To make this model differentiable for gradient-based optimization, we can use the reparameterization trick from variational inference:
-
-\begin{equation}
-\mathbf{q} = \mathbf{q}_0 + L\mathbf{\epsilon}
-\end{equation}
-
-where:
-\begin{itemize}
-\item $L$ is the Cholesky decomposition of $\Sigma$ (i.e., $\Sigma = LL^T$)
-\item $\mathbf{\epsilon}$ is a standard normal random variable
-\end{itemize}
-
-This allows gradients to flow through the parameters $\mathbf{q}_0$ and $L$ during optimization.
-
-\subsection{Implementation in Diffuse Scattering Model}
-
-The measured intensity at pixel $(x,y)$ can then be approximated as:
-
-\begin{equation}
-I_{\text{det}}(x,y) \approx \frac{1}{N} \sum_{i=1}^{N} I_d(\mathbf{q}_0(x,y) + L\mathbf{\epsilon}_i) \cdot G(x,y)
-\end{equation}
-
-where $N$ is the number of Monte Carlo samples used to estimate the integral. This Monte Carlo integration is differentiable with respect to all parameters.
-
-\subsection{Advantages of This Approach}
-
-\begin{enumerate}
-\item \textbf{Differentiability}: Enables the use of efficient gradient-based optimization algorithms.
-
-\item \textbf{Flexibility}: The covariance matrix $\Sigma$ can be adapted to model different SASE beam properties and geometries.
-
-\item \textbf{Computational Efficiency}: The reparameterization approach allows backpropagation through the model while maintaining computational tractability.
-
-\item \textbf{Uncertainty Quantification}: Natural extension to modeling shot-to-shot variations by treating the parameters as random variables with priors.
-\end{enumerate}
-
-\subsection{Practical Implementation}
-
-In a PyTorch or JAX implementation, this might look like:
-
+\section{PyTorch Example (Case 3)}
 \begin{verbatim}
-def diffuse_model(q_0, L, I_d_func, num_samples=100):
-    # q_0: central q vector for a pixel
+def scattering_model(q_0, L, I_B_func, I_d_func, G_B_func, G_d_func, num_samples=100):
+    # q_0: central q vector (or array) for a pixel
     # L: Cholesky factor of covariance matrix
-    # I_d_func: function that computes diffuse intensity at a given q
+    # I_B_func: function computing Bragg intensity at q
+    # I_d_func: function computing diffuse intensity at q
+    # G_B_func: function computing geometric/polarization factors for Bragg
+    # G_d_func: function computing geometric/polarization factors for diffuse
     
     # Sample from standard normal
     epsilon = torch.randn(num_samples, 3)
     
-    # Apply reparameterization trick
+    # Reparameterization
     q_samples = q_0.unsqueeze(0) + torch.matmul(epsilon, L.T)
     
-    # Compute intensity at each sampled q point
-    I_samples = torch.stack([I_d_func(q) for q in q_samples])
+    # Compute Bragg + diffuse at each sampled q with appropriate geometric factors
+    I_samples = torch.stack([
+        I_B_func(q) * G_B_func(q) + I_d_func(q) * G_d_func(q) 
+        for q in q_samples
+    ])
     
-    # Average the intensities (Monte Carlo integration)
+    # Monte Carlo average
     return I_samples.mean()
 \end{verbatim}
 
-This framework allows for efficient, differentiable modeling of the finite bandwidth effects in SASE-based diffuse scattering experiments.
+\section{Conclusion}
+A hierarchy of models provides a systematic way to incorporate SASE pulse effects in X-ray scattering experiments. From the simplest monochromatic approximation to full spectral modeling, one can balance computational effort against experimental fidelity. 
 
 \end{document}
