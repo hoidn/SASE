@@ -76,7 +76,7 @@ I_{\text{det},j}(x,y) \approx I_B(\mathbf{q}(x,y,\omega_j)) \cdot G_B(x,y,\omega
 \end{equation}
 An approximate fractional change in intensity due to jitter:
 \begin{equation}
-\frac{\Delta I_{\text{det}}}{I_{\text{det}}} \approx \left|\nabla_{\mathbf{q}} \ln I \cdot \frac{\mathbf{q}}{|\mathbf{q}|}\right|\frac{\Delta E}{E}\,|\mathbf{q}|.
+\frac{\Delta I_{\text{det}}}{I_{\text{det}}} \approx \left|\nabla_{\mathbf{q}} \ln I \cdot \frac{\mathbf{q}}{|\mathbf{q}|}\right|\frac{\Delta \omega}{\omega}\,|\mathbf{q}|.
 \end{equation}
 
 \subsubsection*{Question}
@@ -96,7 +96,7 @@ I_{\text{SASE},j}(\omega) \approx \exp\!\Bigl[-\frac{(\omega - \omega_j)^2}{2\si
 I_{\text{det},j}(x,y) \approx \int \bigl[I_B(\mathbf{q}(x,y,\omega)) \cdot G_B(x,y,\omega) + I_d(\mathbf{q}(x,y,\omega)) \cdot G_d(x,y,\omega)\bigr]\,
 \exp\!\Bigl[-\tfrac{(\omega - \omega_j)^2}{2\sigma_{\omega,j}^2}\Bigr]\, d\omega.
 \end{equation}
-In reciprocal space, this corresponds to integrating over a "slab" of thickness proportional to $\Delta E/E \times |\mathbf{q}|$.
+In reciprocal space, this corresponds to integrating over a "slab" of thickness proportional to $\Delta \omega/\omega \times |\mathbf{q}|$.
 
 \subsubsection*{Differentiable Modeling (Monte Carlo)}
 Represent the SASE spectrum in $\mathbf{q}$-space as a 3D Gaussian, with covariance $\Sigma_j = L_j L_j^{T}$. The reparameterization trick samples
